@@ -1,1 +1,443 @@
-# the-kingdom-is
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Kingdom Is</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Cinzel:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ivory: #F8F4EC; --ivory-dark: #EDE8DC; --ivory-mid: #F2EDE3;
+      --black: #0D0D0D; --black-soft: #1A1A1A; --ink: #2C2C2C; --ink-light: #5C5C5C;
+      --gold: #B8965A; --gold-light: #D4AF78; --rule: #C8BFA8;
+    }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--ivory); color: var(--ink); font-family: 'Cormorant Garamond', Georgia, serif; font-size: 18px; line-height: 1.7; overflow-x: hidden; }
+
+    /* HEADER */
+    .site-header { background-color: var(--black); color: var(--ivory); text-align: center; padding: 80px 24px 70px; position: relative; overflow: hidden; }
+    .site-header::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(184,150,90,0.18) 0%, transparent 70%), radial-gradient(ellipse 40% 40% at 20% 100%, rgba(184,150,90,0.08) 0%, transparent 60%); pointer-events: none; }
+    .header-ornament { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; margin-bottom: 28px; opacity: 0; animation: fadeUp 1s ease 0.2s forwards; }
+    .site-title { font-family: 'Cinzel', serif; font-size: clamp(52px, 10vw, 96px); font-weight: 500; letter-spacing: 0.06em; line-height: 1; color: var(--ivory); margin-bottom: 6px; opacity: 0; animation: fadeUp 1s ease 0.4s forwards; }
+    .title-emphasis { color: var(--gold-light); font-style: italic; font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 0.9em; letter-spacing: 0.02em; }
+    .site-rule { width: 80px; height: 1px; background: var(--gold); margin: 32px auto; opacity: 0; animation: fadeUp 1s ease 0.6s forwards; }
+    .site-subtitle-top { font-family: 'Cormorant Garamond', serif; font-size: clamp(18px, 3vw, 24px); font-weight: 300; font-style: italic; color: var(--ivory-dark); letter-spacing: 0.03em; opacity: 0; animation: fadeUp 1s ease 0.7s forwards; margin-bottom: 8px; }
+    .site-subtitle-bottom { font-family: 'Cinzel', serif; font-size: clamp(10px, 1.8vw, 13px); font-weight: 400; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; opacity: 0; animation: fadeUp 1s ease 0.9s forwards; margin-bottom: 48px; }
+    .header-verse { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-style: italic; color: rgba(248,244,236,0.45); letter-spacing: 0.04em; opacity: 0; animation: fadeUp 1s ease 1.1s forwards; }
+
+    /* NAV */
+    .sticky-nav { position: sticky; top: 0; z-index: 100; background: var(--black-soft); border-bottom: 1px solid rgba(184,150,90,0.25); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 52px; }
+    .nav-brand { font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 0.2em; color: var(--gold); text-decoration: none; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em; color: rgba(248,244,236,0.6); text-decoration: none; text-transform: uppercase; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--gold-light); }
+
+    /* INTRO */
+    .intro-section { max-width: 720px; margin: 80px auto; padding: 0 32px; text-align: center; opacity: 0; animation: fadeUp 1s ease 1.3s forwards; }
+    .intro-section p { font-size: 20px; font-weight: 300; line-height: 1.85; color: var(--ink); }
+    .intro-section em { color: var(--gold); font-style: italic; }
+
+    /* DIVIDER */
+    .section-divider { display: flex; align-items: center; gap: 20px; max-width: 900px; margin: 0 auto 60px; padding: 0 32px; }
+    .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+    .section-divider span { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.4em; color: var(--gold); text-transform: uppercase; white-space: nowrap; }
+
+    /* GRID */
+    .days-section { max-width: 1100px; margin: 0 auto 100px; padding: 0 32px; }
+    .days-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+
+    .day-card { background: white; border: 1px solid var(--ivory-dark); padding: 20px 16px; transition: all 0.25s ease; position: relative; overflow: hidden; text-align: center; cursor: default; }
+    .day-card::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: var(--gold); transform: scaleX(0); transition: transform 0.25s ease; }
+
+    /* Past & current days — clickable */
+    .day-card.available { cursor: pointer; }
+    .day-card.available:hover { border-color: var(--gold-light); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.07); }
+    .day-card.available:hover::before { transform: scaleX(1); }
+
+    /* TODAY — highlighted */
+    .day-card.today { border-color: var(--gold); background: var(--ivory-mid); cursor: pointer; }
+    .day-card.today .day-number { color: var(--gold); }
+    .day-card.today::after { content: 'TODAY'; position: absolute; top: 8px; right: 8px; font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: 0.2em; color: var(--gold); }
+    .day-card.today:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(184,150,90,0.18); }
+    .day-card.today:hover::before { transform: scaleX(1); }
+
+    /* Active (selected) */
+    .day-card.active { background: var(--black) !important; color: var(--ivory); border-color: var(--black) !important; }
+    .day-card.active .day-number { color: var(--gold); }
+    .day-card.active .day-title-preview { color: rgba(248,244,236,0.7); }
+    .day-card.active::after { display: none; }
+
+    /* Locked — content written but not yet time */
+    .day-card.locked { opacity: 0.55; cursor: not-allowed; }
+    .day-card.locked:hover { transform: none; box-shadow: none; }
+    .day-card.locked .day-unlock { display: block; }
+
+    /* Coming soon — not yet written */
+    .day-card.coming-soon { opacity: 0.38; cursor: default; }
+    .day-card.coming-soon:hover { transform: none; box-shadow: none; }
+
+    .day-number { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.25em; color: var(--gold); margin-bottom: 6px; }
+    .day-title-preview { font-family: 'Cormorant Garamond', serif; font-size: 14px; font-style: italic; color: var(--ink-light); line-height: 1.4; }
+    .day-date-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.12em; color: var(--rule); margin-top: 5px; }
+    .day-unlock { display: none; font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 0.15em; color: var(--gold); margin-top: 6px; text-transform: uppercase; line-height: 1.4; }
+
+    /* READER */
+    .reader-section { background: white; border-top: 1px solid var(--ivory-dark); border-bottom: 1px solid var(--ivory-dark); padding: 80px 32px; display: none; }
+    .reader-section.visible { display: block; }
+    .reader-inner { max-width: 740px; margin: 0 auto; }
+    .reader-eyebrow { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.35em; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; }
+    .reader-title { font-family: 'Cinzel', serif; font-size: clamp(26px, 4vw, 42px); font-weight: 500; color: var(--black); line-height: 1.25; margin-bottom: 40px; }
+    .reader-rule { width: 48px; height: 2px; background: var(--gold); margin-bottom: 48px; }
+
+    .scriptures-block { background: var(--ivory); border-left: 3px solid var(--gold); padding: 28px 32px; margin-bottom: 48px; }
+    .scriptures-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.35em; color: var(--gold); text-transform: uppercase; margin-bottom: 20px; }
+    .scripture-item { margin-bottom: 20px; }
+    .scripture-item:last-child { margin-bottom: 0; }
+    .scripture-ref { display: block; font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.2em; color: var(--gold); margin-bottom: 5px; }
+    .scripture-text { display: block; font-family: 'EB Garamond', serif; font-size: 17px; font-style: italic; color: var(--ink); line-height: 1.65; }
+
+    .reflection-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.35em; color: var(--ink-light); text-transform: uppercase; margin-bottom: 20px; }
+    .reflection-text { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 400; line-height: 1.85; color: var(--ink); margin-bottom: 56px; }
+    .reflection-text p { margin-bottom: 1.4em; }
+    .reflection-text p:last-child { margin-bottom: 0; }
+
+    .prayer-block { background: var(--black); color: var(--ivory); padding: 40px; margin-bottom: 48px; }
+    .prayer-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.35em; color: var(--gold); text-transform: uppercase; margin-bottom: 28px; }
+    .prayer-points { list-style: none; counter-reset: prayer-counter; }
+    .prayer-points li { counter-increment: prayer-counter; font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 300; line-height: 1.7; color: rgba(248,244,236,0.9); padding: 14px 0; border-bottom: 1px solid rgba(184,150,90,0.2); display: flex; gap: 20px; align-items: flex-start; }
+    .prayer-points li:last-child { border-bottom: none; }
+    .prayer-points li::before { content: counter(prayer-counter); font-family: 'Cinzel', serif; font-size: 11px; color: var(--gold); letter-spacing: 0.1em; min-width: 20px; padding-top: 4px; }
+
+    .coleader-block { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; padding: 18px 24px; border: 1px solid var(--ivory-dark); background: var(--ivory-mid); }
+    .coleader-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; white-space: nowrap; }
+    .coleader-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: var(--ink); }
+
+    .reader-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 48px; border-top: 1px solid var(--ivory-dark); }
+    .reader-nav-btn { font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: 0.25em; color: var(--gold); background: none; border: 1px solid var(--gold); padding: 12px 24px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
+    .reader-nav-btn:hover { background: var(--gold); color: var(--black); }
+    .reader-nav-btn:disabled { opacity: 0.2; cursor: default; }
+    .reader-nav-btn:disabled:hover { background: none; color: var(--gold); }
+    .reader-nav-day { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-style: italic; color: var(--ink-light); }
+
+    /* FOOTER */
+    footer { background: var(--black); color: rgba(248,244,236,0.4); text-align: center; padding: 48px 24px; }
+    footer .footer-title { font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 0.25em; color: var(--gold); margin-bottom: 10px; }
+    footer p { font-family: 'Cormorant Garamond', serif; font-size: 14px; font-style: italic; }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @media (max-width: 600px) {
+      .sticky-nav { padding: 0 16px; } .nav-links { gap: 16px; }
+      .days-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+      .prayer-block { padding: 28px 24px; } .scriptures-block { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-ornament">Days 1 – 50 &nbsp;·&nbsp; Resurrection to Pentecost</div>
+  <h1 class="site-title">The Kingdom <span class="title-emphasis">Is</span></h1>
+  <div class="site-rule"></div>
+  <p class="site-subtitle-top">From the Empty Tomb to the Upper Room</p>
+  <p class="site-subtitle-bottom">A 50-Day Journey with Jesus' Disciples</p>
+  <p class="header-verse">"Then He opened their minds to understand the Scriptures." — Luke 24:45</p>
+</header>
+
+<nav class="sticky-nav">
+  <a href="#" class="nav-brand">The Kingdom Is</a>
+  <ul class="nav-links">
+    <li><a href="#all-days">All Days</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+</nav>
+
+<section class="intro-section" id="about">
+  <p>Between the empty tomb and the rushing wind of Pentecost, <em>something profound happened</em>. Jesus walked with His disciples and opened their minds to understand the Scriptures — revealing the Kingdom of God in ways they had never before perceived. This is a 50-day journey through that same revelation.</p>
+</section>
+
+<section class="reader-section" id="day-reader">
+  <div class="reader-inner">
+    <div class="reader-eyebrow" id="reader-eyebrow"></div>
+    <h2 class="reader-title" id="reader-title"></h2>
+    <div class="reader-rule"></div>
+    <div class="scriptures-block">
+      <div class="scriptures-label">Scripture</div>
+      <ul id="reader-scriptures" style="list-style:none;"></ul>
+    </div>
+    <div class="reflection-label">Reflection</div>
+    <div class="reflection-text" id="reader-reflection"></div>
+    <div id="reader-coleader" class="coleader-block" style="display:none;">
+      <span class="coleader-label">Co-Leader</span>
+      <span class="coleader-name" id="coleader-name-text"></span>
+    </div>
+    <div class="prayer-block">
+      <div class="prayer-label">Prayer Points</div>
+      <ol class="prayer-points" id="reader-prayer"></ol>
+    </div>
+    <div class="reader-nav">
+      <button class="reader-nav-btn" id="btn-prev" onclick="navigateDay(-1)">← Previous</button>
+      <span class="reader-nav-day" id="reader-nav-label"></span>
+      <button class="reader-nav-btn" id="btn-next" onclick="navigateDay(1)">Next →</button>
+    </div>
+  </div>
+</section>
+
+<section class="days-section" id="all-days">
+  <div class="section-divider"><span>The Journey</span></div>
+  <div class="days-grid" id="days-grid"></div>
+</section>
+
+<footer>
+  <div class="footer-title">The Kingdom Is</div>
+  <p>From the Empty Tomb to the Upper Room &nbsp;·&nbsp; A 50-Day Journey with Jesus' Disciples</p>
+</footer>
+
+<script>
+const days = [
+  {
+    title: "The King Calls Us by Name",
+    date: "April 5",
+    scriptures: [
+      { ref: "Isaiah 43:1", text: "Now this is what the Lord says\u2014the one who created you, Jacob, and the one who formed you, Israel\u2014\u201cDo not fear, for I have redeemed you; I have called you by your name; you are mine.\u201d" },
+      { ref: "John 20:14\u201316", text: "Having said this, she turned around and saw Jesus standing there, but she did not know it was Jesus. \u201cWoman,\u201d Jesus said to her, \u201cwhy are you crying? Who is it that you\u2019re seeking?\u201d Supposing he was the gardener, she replied, \u201cSir, if you\u2019ve carried him away, tell me where you\u2019ve put him, and I will take him away.\u201d Jesus said to her, \u201cMary.\u201d Turning around, she said to him in Aramaic, \u201cRabboni!\u201d (which means \u201cTeacher\u201d)." },
+      { ref: "Proverbs 25:2", text: "It is the glory of God to conceal a matter and the glory of kings to seek it out." }
+    ],
+    reflection: "<p>There are moments in Scripture where everything that has been written begins to come into focus\u2014not by explanation, but by encounter. The days following the resurrection of Jesus are filled with moments like these.</p><p>What His disciples had seen, heard, and hoped for was shattered by the cross, and yet, in ways they could not yet understand, the Kingdom was unfolding before them. This journey begins there.</p><p>Mary stood in a garden, speaking with Jesus, and she did not recognize Him. The voice that had called her out of darkness, the One she had followed and loved\u2014she assumed He was someone else. The veil had been torn and the world itself had shifted, but her perception had not yet caught up with reality.</p><p>This is the nature of the Kingdom. It is not absent\u2014it is often unseen. Not because it is distant, but because it is concealed until it is revealed.</p><p>Proverbs tells us that it is the glory of God to conceal a matter. What is hidden is not far, but deep, and it calls for pursuit. The Kingdom is not discovered through observation alone, but through revelation given by the King Himself.</p><p>\u201cMary.\u201d</p><p>With a single word, spoken in a voice she knew, what had been concealed was made known. Grief gave way to recognition. Loss gave way to presence. She was with the One she had watched suffer and die. He stood before her\u2014alive. In His presence, her heart, her hope, and all that had been broken begins to be restored.</p><p>What the Lord spoke through Isaiah\u2014\u201cI have called you by your name; you are mine\u201d\u2014is no longer a distant promise. It is fulfilled here, in a garden, as the risen King calls one of His own by name. The Kingdom is revealed here as a woman restored through recognition.</p><p>As we begin this journey, we do not start with explanations. We begin by recognizing that the Kingdom is only understood by revelation. What has been written, what has been spoken, what was witnessed\u2014these are all part of one unfolding reality being made known.</p><p>The Kingdom of God is not an idea to grasp or something we build toward. It is the realm that followers of the Lord seek, enter, and inherit. It is where we belong, the framework of our lives and our inheritance, even as we live in the natural world.</p><p>Like Mary, we may find that what has been before us all along becomes suddenly and increasingly clear when He reveals Himself to us. In this journey between the empty tomb and the Upper Room, may we come to see that it is our glory to seek the King\u2014and His Kingdom.</p>",
+    prayer: ["Lord, call us by name today as You called Mary — break through every assumption we carry about who You are.", "Open our eyes to recognize Your presence where we have not seen You.", "Let the glory of concealment give way to the glory of revelation in our lives.", "Restore what grief has taken — hope, faith, and expectation of Your Kingdom.", "Teach us that the Kingdom is not absent but unseen, and give us eyes to seek.", "Forgive us for looking for the living Christ in places of death and disappointment.", "Begin in us what began in that garden — a completely new seeing of who You are and what Your Kingdom is."]
+  },
+  {
+    title: "The King Offers Peace",
+    date: "April 6",
+    scriptures: [
+      { ref: "Isaiah 26:3\u20134", text: "You will keep the mind that is dependent on you in perfect peace, for it is trusting in you. Trust in the Lord forever, because in the Lord, the Lord himself, is an everlasting rock." },
+      { ref: "Luke 24:36\u201339", text: "As they were saying these things, he himself stood in their midst. He said to them, \u201cPeace to you!\u201d But they were startled and terrified and thought they were seeing a ghost. \u201cWhy are you troubled?\u201d he asked them. \u201cAnd why do doubts arise in your hearts? Look at my hands and my feet, that it is I myself. Touch me and see, because a ghost does not have flesh and bones as you can see I have.\u201d" },
+      { ref: "Proverbs 3:24\u201326", text: "When you lie down, you will not be afraid; you will lie down, and your sleep will be pleasant. Do not fear sudden danger or the ruin of the wicked when it comes, for the Lord will be your confidence and will keep your foot from a snare." }
+    ],
+    reflection: "<p>The doors were shut. Fear had narrowed the disciples\u2019 world. And then\u2014Jesus was there.</p><p>He did not knock, open the door, or wait to be let in. The One who had walked on water continued to reveal that what they thought was fixed was subject to a greater reality in Him\u2014even beyond the grave. Still, they were terrified.</p><p>\u201cPeace to you.\u201d</p><p>They knew His voice. They had followed Him closely for years, yet now they were living in fear. Jesus acknowledges their troubled hearts\u2014their fear and their doubt, and He invites them closer.</p><p>\u201cTouch me and see.\u201d</p><p>With His appearance, the Kingdom was becoming more than good news accompanied by signs\u2014it was redefining their reality. The physical body of the risen Christ was moving freely between realms, between what they thought was possible and what truly is. As the natural and unseen converge, the Kingdom is revealed, and so is the foundation of our trust.</p><p>Through Isaiah, the Lord promises a people kept in perfect peace for those whose minds depend on Him. Peace is not first experienced as a feeling\u2014it is established by Him. In the presence of the trustworthy One, our minds are stilled, even as our circumstances and paradigms unravel and break. He is our rock. And as we experience the Kingdom, we find that He is the Creator and sustainer of reality.</p><p>Proverbs reminds us that the Lord is our assurance and our confidence, keeping us from the snares we cannot see. The disciples had secured their doors, but their safety was not found in what they could close off\u2014it was found in the One who could enter regardless.</p><p>He is the One to whom we draw near. In His presence, a new understanding of the good news begins to take shape\u2014and what once defined reality begins to give way to the Kingdom.</p>",
+    prayer: ["Jesus, speak Your peace into every locked room of our fear.", "Still our minds and anchor us in You — the everlasting rock.", "Help us to trust You not only with our souls but with our understanding.", "Reveal Yourself to us as You did to the disciples — breaking through what we thought was sealed.", "Let Your peace not be a feeling we seek but a Person we trust.", "Give us the confidence that only comes from resting in Your presence.", "Where doubt has narrowed our world, expand it with the reality of Your Kingdom."]
+  },
+  {
+    title: "The Kingdom Blesses Faith",
+    date: "April 7",
+    scriptures: [
+      { ref: "Habakkuk 2:4", text: "Look, his ego is inflated; he is without integrity. But the righteous one will live by his faith." },
+      { ref: "John 20:26\u201329", text: "A week later his disciples were indoors again, and Thomas was with them. Even though the doors were locked, Jesus came and stood among them and said, \u201cPeace be with you.\u201d Then he said to Thomas, \u201cPut your finger here and look at my hands. Reach out your hand and put it into my side. Don\u2019t be faithless, but believe.\u201d Thomas responded to him, \u201cMy Lord and my God!\u201d Jesus said, \u201cBecause you have seen me, you have believed. Blessed are those who have not seen and yet believe.\u201d" },
+      { ref: "Proverbs 3:5\u20136", text: "Trust in the Lord with all your heart, and do not rely on your own understanding; in all your ways know him, and he will make your paths straight." }
+    ],
+    reflection: "<p>The doors are still locked. The world outside has not changed\u2014the threat remains and their uncertainty lingers. And Jesus comes again. Not to the crowds, not to the city, but to them.</p><p>This time, He comes especially for Thomas.</p><p>Thomas had heard the truth, but he had drawn a line: unless I see, unless I touch, I will not believe. It was not defiance\u2014these were the words of someone trying to make sense of what could not be reasonably explained. His doubt was rooted in the limits of his understanding.</p><p>Jesus meets him there to address the root and reveal the truth. He does not dismiss the struggle. He brings peace in the midst of it, inviting Thomas to encounter what he had been unable to accept: \u201cPut your finger here\u2026 Don\u2019t be faithless, but believe.\u201d</p><p>The Kingdom does not bypass our struggle to understand\u2014it presents another reality. It invites us to choose how we want to live our lives, according to our own understanding or by faith in Him.</p><p>The risen Christ did not remove the evidence of His suffering. Wounds remain, no longer signs of defeat, but proof of His identity and what has been accomplished. Our Lord reveals His Kingdom and wants to be known\u2014the Lamb who was slain, and the conquering King.</p><p>Through the prophet Habakkuk, the Lord declared: \u201cthe righteous one will live by his faith.\u201d Not by sight. Not by certainty. By faith, the righteous realign with truth and are transformed.</p><p>Thomas sees\u2014and in seeing, confesses what no one had yet said so plainly: \u201cMy Lord and my God!\u201d</p><p>Proverbs implores us to trust in the Lord with all our heart, and not to lean on our own understanding. This is not a call to abandon reason, but to confess our beliefs and see what He has to say. The Kingdom is ordered by the wisdom of God\u2014intended to be sought and received from Him. And as it is, He straightens our paths and our lives are transformed.</p><p>Jesus does not rebuke Thomas for needing to see, nor does He leave Thomas in his doubt. He does, however, extend the horizon beyond him: \u201cBlessed are those who have not seen and yet believe.\u201d</p><p>There is evidence of the Kingdom throughout the earth today\u2014moving forward through those who trust and follow the King even if we do not yet see. As we seek and believe, the Kingdom is revealed and the Lord rewards those who have faith in Him.</p>",
+    prayer: ["Lord, meet us in our honest doubts — as You met Thomas — with presence, not condemnation.", "Help us to trust You beyond what our understanding can contain.", "Let the wounds of Christ be our confidence: He has overcome, and we are His.", "Teach us to live by faith, not by sight — the way of the righteous in Your Kingdom.", "Where we have drawn lines of unbelief, invite us past them into encounter.", "Let the confession of Thomas rise in us: ‘My Lord and my God!’", "Bless all who believe without seeing — and make us a generation of faithful witnesses."]
+  },
+  {
+    title: "The King Restores His Sheep",
+    date: "April 8",
+    scriptures: [
+      { ref: "Ezekiel 34:11\u201316", text: "\u201cFor this is what the Lord God says: See, I myself will search for my flock and look for them. As a shepherd looks for his sheep on the day he is among his scattered flock, so I will look for my flock. I will rescue them from all the places where they have been scattered on a day of clouds and total darkness\u2026 I will seek the lost, bring back the strays, bandage the injured, and strengthen the weak. I will shepherd them with justice.\u201d" },
+      { ref: "John 21:15\u201317", text: "When they had eaten breakfast, Jesus asked Simon Peter, \u201cSimon, son of John, do you love me more than these?\u201d \u201cYes, Lord,\u201d he said to him, \u201cyou know that I love you.\u201d \u201cFeed my lambs,\u201d he told him. A second time he asked him, \u201cSimon, son of John, do you love me?\u201d \u201cYes, Lord,\u201d he said to him, \u201cyou know that I love you.\u201d \u201cShepherd my sheep,\u201d he told him. He asked him the third time, \u201cSimon, son of John, do you love me?\u201d Peter was grieved that he asked him the third time, \u201cDo you love me?\u201d He said, \u201cLord, you know everything; you know that I love you.\u201d \u201cFeed my sheep,\u201d Jesus said." },
+      { ref: "Proverbs 27:23", text: "Know well the condition of your flock, and pay attention to your herds." }
+    ],
+    reflection: "<p>The resurrection did not erase what happened before the cross. Along with the others, Peter had seen the Lord, heard His voice, and returned to His presence\u2014but the pain and insecurity of his denial remained.</p><p>When He appears to His disciples this time, Jesus cooks them breakfast. He then turns to Peter and asks, \u201cDo you love me?\u201d</p><p>He asks it once, then again, and a third time. Not to expose Peter, but to restore him.</p><p>What was fractured was being made whole, not through explanation, but through encounter. Three denials answered by three restoring commands from the Lord: \u201cFeed my lambs\u2026 Shepherd my sheep\u2026 Feed my sheep.\u201d</p><p>Through Ezekiel, the Lord declared that He Himself would seek His scattered flock, bringing back the strays, bandaging and strengthening the weak. That prophecy was beginning to be fulfilled, not in a corporate act of deliverance, but in a deeply personal exchange where the Shepherd restores one of His own\u2014a firstfruit of what is promised.</p><p>The injured, weak, painfully humbled sheep was entrusted again. Not because he had proven himself, but because the Great Shepherd knew what was needed to restore the deepest recesses of his soul.</p><p>Proverbs reminds us that the care of the flock requires intimate knowledge, attention, and responsibility. As he is restored, Peter is reaffirmed in his role in the work of the Kingdom\u2014a restoration to his call to live for the King and die to his flesh.</p><p>No longer defined by his failure, Peter is defined by the One who restores him\u2014and sends him forward to tend His flock and lay down his life for the Kingdom of God.</p>",
+    prayer: ["Lord, meet us at our point of failure — as You met Peter at the fire — and restore us.", "Ask us the question we need to hear: Do you love Me?", "Let Your restoration go to the deepest places — not just our actions but our identity.", "Reaffirm our calling even where we have stumbled and felt disqualified.", "Give us the heart of shepherds — who know, tend, and lay down their lives for the flock.", "Fulfill Your promise to seek the lost, bind the injured, and strengthen the weak in us and through us.", "Let every failure become a place of encounter — where the Great Shepherd restores and recommissions."]
+  },
+  {
+    title: "The Kingdom Is Revealed in the Scriptures",
+    date: "April 9",
+    scriptures: [
+      { ref: "Deuteronomy 8:3", text: "He humbled you by letting you go hungry; then he gave you manna to eat, which you and your ancestors had not known, so that you might learn that man does not live on bread alone but on every word that comes from the mouth of the Lord." },
+      { ref: "Luke 24:44\u201345", text: "He told them, \u201cThese are my words that I spoke to you while I was still with you\u2014that everything written about me in the Law of Moses, the Prophets, and the Psalms must be fulfilled.\u201d Then he opened their minds to understand the Scriptures." },
+      { ref: "Proverbs 2:6", text: "For the Lord gives wisdom; from his mouth come knowledge and understanding." }
+    ],
+    reflection: "<p>The disciples had heard these things before. From a young age, they knew the Scriptures.</p><p>As young men and women, they walked with Jesus as He taught in synagogues, along roads, on hillsides, and across tables. They had listened as He spoke of the Law, the Prophets, and the Kingdom of God. They had heard Him speak of suffering, rejection, and rising again.</p><p>But hearing is not the same as understanding. There is a knowing of the mind, and there is a knowing of the heart\u2014and an understanding that reconciles both, revealed by the Lord alone.</p><p>Now, after the shock, the grief, the fear, and the wonder of the resurrection, Jesus begins to guide them back. Not to something new, but to what He had already said\u2014and done.</p><p>\u201cThese are my words\u2026\u201d</p><p>What once seemed unclear, or even impossible, was revisited in the light of what they had seen. The cross and the resurrection had not introduced something new\u2014they revealed what was intended all along.</p><p>Then comes the turning point: \u201cHe opened their minds to understand the Scriptures.\u201d And in their understanding, the seeds of God\u2019s Word sown into their lives begin to take root, sprout, and bear fruit.</p><p>In His first appearances, the disciples were being personally restored by His presence. In the days before He ascends, the Lord begins to open everything to them\u2014what had been written, what they had witnessed, and what was still to come. Jesus reveals Himself and His Kingdom through the pages of His Word.</p><p>Through Moses, the Lord had taught His people that life is not sustained by bread alone, but by every word that comes from His mouth. That truth is echoed in the Proverbs. The same God who once fed His people in the wilderness is now feeding them again\u2014not with manna, but with understanding.</p><p>As He speaks, the disciples are not arriving at insight; they are receiving it. The Kingdom of God is not only sought and encountered\u2014it is received as the Lord speaks and opens our minds to understand what He has meant all along.</p><p>And as their understanding begins to grow, so does their joy. May the Lord open and reveal His Word to us now as He did to them. May we begin to understand, as they did, that His story has not changed. The gospel of the Kingdom of God is finally being seen for what it truly is.</p>",
+    prayer: ["Lord, open our minds to understand the Scriptures as You opened theirs.", "Feed us not with information alone, but with the living Word that comes from Your mouth.", "Let what we have heard for years suddenly come alive in us by Your Spirit.", "Reveal Yourself throughout the Law, the Prophets, and the Psalms — show us the thread.", "Give us hunger for Your Word that goes beyond the mind and reaches the heart.", "Let the seeds of Your Word that have been sown in us begin to bear fruit now.", "Open what has been closed in our understanding — and let the joy of revelation rise."]
+  },
+  {
+    title: "The Cross Was Written",
+    date: "April 10",
+    scriptures: [
+      { ref: "Psalm 22:1, 16\u201323", text: "My God, my God, why have you abandoned me? \u2026For dogs have surrounded me; a gang of evildoers has closed in on me; they pierced my hands and my feet\u2026 They divided my garments among themselves, and they cast lots for my clothing. But you, Lord, don\u2019t be far away\u2026 You answered me! I will proclaim your name to my brothers and sisters; I will praise you in the assembly." },
+      { ref: "Luke 24:46\u201347", text: "Then he said to them, \u201cThis is what is written: the Messiah would suffer and rise from the dead the third day, and repentance for forgiveness of sins would be proclaimed in his name to all the nations, beginning at Jerusalem.\u201d" },
+      { ref: "Proverbs 30:5", text: "Every word of God is pure; he is a shield to those who take refuge in him." }
+    ],
+    reflection: "<p>As the Lord continued to open the Scriptures, the disciples were not only remembering what He had said after the resurrection\u2014they were remembering what He had said from the cross.</p><p>\u201cMy God, my God, why have you abandoned me?\u201d</p><p>These were not just words of despair spoken in the agony of suffering. They are the opening line of a psalm that Israel knew. And now, in the light of the cross and the empty tomb, they were drawn back to it\u2014line by line, image by image.</p><p>They remembered His body pierced before the eyes of men. The mockery. The exposure. The soldiers dividing His garments and casting lots. What had unfolded before them in horror was now being illuminated through the Scriptures.</p><p>The cross of Christ was not the collapse of the Kingdom\u2014it had been written.</p><p>Psalm 22 did not only describe suffering\u2014it carried them through it. The cry of abandonment moved toward deliverance, and deliverance moved toward worship. \u201cYou answered me\u2026 You who fear the Lord, praise him!\u201d</p><p>What began in anguish did not end in silence. It ended in resurrection life and a people who would declare what God had done.</p><p>This is what Jesus now makes unmistakably clear: This is what is written. The Messiah would suffer. The Messiah would rise. And what had been accomplished would be proclaimed to the nations.</p><p>Proverbs reminds us that every word of God is pure. Nothing spoken by the Lord had failed. Not one image. Not one detail. Not one promise. Even in the place that looked like defeat, the Word of God was proving itself true.</p><p>As this began to settle within them, something else began to rise. Not full understanding\u2014not yet. But a steadying confidence. An awakening awe and wonder. A realization that what had seemed like the end had always been held within the purposes of God.</p><p>The cross of Christ\u2014love poured out as darkness raged\u2014this was the way of the Kingdom. And now, as the Scriptures were opened to them, the disciples could see that what had been written had come to pass. It was finished on the cross.</p><p>May our hearts also grow to comprehend and rejoice in a Savior who revealed His glory on the cross and fulfills every word He has spoken\u2014the good news of His Kingdom that continues to transform the world.</p>",
+    prayer: ["Lord, let the cross be our glory — reveal to us the wisdom hidden in what looked like defeat.", "Open Psalm 22 and all the Scriptures to us, that we might see what was written before it happened.", "Increase our confidence in Your Word — every word is pure, not one has failed.", "Let the cry of abandonment give way to the song of deliverance in our own hearts.", "Show us that suffering in Your Kingdom is never the end of the story.", "Awaken in us awe and wonder at a God whose plan held even through the cross.", "Let the proclamation of the cross go forth through us to the nations — it is written, it is finished, it is risen."]
+  },
+  {
+    title: "The Resurrection Was Spoken",
+    date: "April 11",
+    scriptures: [
+      { ref: "Hosea 6:1\u20132", text: "Come, let\u2019s return to the Lord. For he has torn us, and he will heal us; he has wounded us, and he will bind up our wounds. He will revive us after two days, and on the third day he will raise us up so we can live in his presence." },
+      { ref: "Luke 24:6\u20138", text: "He is not here, but he has risen! Remember how he spoke to you when he was still in Galilee, saying, \u201cIt is necessary that the Son of Man be betrayed into the hands of sinful men, be crucified, and rise on the third day.\u201d And they remembered his words." },
+      { ref: "Proverbs 4:18", text: "The path of the righteous is like the light of dawn, shining brighter and brighter until midday." }
+    ],
+    reflection: "<p>As their understanding deepened, the disciples were not only being shown what had been written\u2014they were remembering what He had spoken.</p><p>\u201cRemember how he spoke to you\u2026\u201d</p><p>Before His death, Jesus had told them what would happen. He had spoken plainly of suffering, of being handed over, of death\u2014and of rising again on the third day. He had said, \u201cIt is necessary\u2026\u201d, but they did not comprehend.</p><p>Now, in the light of the empty tomb and the opened Scriptures, His words returned to them with clarity. What had once seemed confusing, even impossible, was now seen for what it was. Truth spoken to prepare them\u2014spoken to be remembered and fulfilled.</p><p>Through the prophet Hosea, the Lord had spoken of a people whom He would wound and restore, tear apart and heal\u2014revive after two days and raise up on the third.</p><p>What had been spoken to Israel was taking on its fuller meaning. In Christ, the pattern was not only expressed\u2014it was embodied. He had been handed over, suffered, and died. Then on the third day, He rose from the grave\u2014all so that His people might live in His presence.</p><p>Proverbs reminds us that the path of the righteous is not revealed all at once. It unfolds like the light of dawn\u2014growing steadily, shining more clearly as the day advances. This is how the Kingdom was being revealed to them. This is how it is being revealed to us. Not all at once, but truly. Faithfully. What He has spoken comes into view.</p><p>As they remembered His words, they began to see that nothing had been left to chance. The Lord\u2019s suffering and their own had all happened according to the purposes of God. The Kingdom had not been threatened; it was unfolding exactly as He said it would.</p><p>And as His light continues to rise, may we learn to trust not only in what we can see\u2014but in all that He has spoken. Because every word has been and is being proven true.</p>",
+    prayer: ["Lord, cause us to remember what You have spoken — let Your words return to us with clarity.", "Where we have walked through wounding and loss, reveal Your pattern: torn, healed, raised.", "Let what Hosea foretold be fulfilled in us — revived, restored, living in Your presence.", "Increase our trust in what You have said, even before we see it come to pass.", "Let the path of the righteous grow brighter in our lives — more of You revealed, day by day.", "Remind us that nothing in our story has been left to chance — it is all unfolding in You.", "Raise us up to live in Your presence — this is the promise, and it is true."]
+  },
+  {
+    title: "When His Word Ignites Our Hearts",
+    date: "April 12",
+    scriptures: [
+      { ref: "Jeremiah 31:31\u201334", text: "\u201cThe days are coming,\u201d declares the Lord, \u201cwhen I will make a new covenant with the house of Israel and with the house of Judah\u2026 I will put my teaching within them and write it on their hearts. I will be their God, and they will be my people\u2026 for I will forgive their iniquity and never again remember their sin.\u201d" },
+      { ref: "Luke 24:32", text: "They said to each other, \u201cWeren\u2019t our hearts burning within us while he was talking with us on the road and explaining the Scriptures to us?\u201d" },
+      { ref: "Proverbs 3:3", text: "Never let loyalty and faithfulness leave you. Tie them around your neck; write them on the tablet of your heart." }
+    ],
+    reflection: "<p>As the Lord opened the Scriptures to them, something began to happen that they could not fully explain.</p><p>Their hearts were burning.</p><p>Not from emotion alone, nor from excitement\u2014their understanding was giving way to something they had not known before. Something deeper.</p><p>As He spoke, the Scriptures were no longer outside of them. They were no longer just words to study, remember, or debate. The Word was coming alive within them.</p><p>They had heard these passages\u2014read them, recited them, learned them from childhood. But now, as Jesus spoke, they felt them. What was written no longer remained at a distance. They could feel His words being written within.</p><p>Through the prophet Jeremiah, the Lord had spoken of a day when His covenant would no longer be carried on tablets of stone or preserved through external obedience alone.</p><p>\u201cI will put my teaching within them and write it on their hearts.\u201d</p><p>This is what they were beginning to experience. The same Word that had been spoken for generations was now being inscribed within them\u2014alive, active, and unmistakable.</p><p>This is why their hearts burned. Because the voice of the King was not only explaining the Scriptures\u2014He was fulfilling them. What they had understood in their minds was now being received within their hearts.</p><p>Proverbs tells us to bind ourselves to His words\u2014to write them on the tablet of our hearts. What is written there cannot be easily forgotten. It shapes us and directs our lives. It becomes part of who we are.</p><p>This is the work of the Kingdom\u2014transformation that flows from the inside out.</p><p>As the disciples walked with Him and listened, even without recognizing Him, they received what He was revealing. They were beginning to experience what had been promised all along.</p><p>This was a covenant not merely remembered, but becoming realized as the source of their very lives. Restoration to their Creator and King\u2014this is why their hearts burned.</p><p>The Word of God was not just walking with them\u2014He was fulfilling His promise and igniting the covenant within. May He continue to speak to us now, kindling what He has written within us for the glory of His Name.</p>",
+    prayer: ["Lord, let our hearts burn as You open the Scriptures to us — ignite what is within.", "Write Your Word not only in our minds but on the tablets of our hearts.", "Fulfill in us the new covenant promise — be our God, make us Your people.", "Let loyalty and faithfulness to You be written so deeply in us they cannot be shaken.", "Where Your Word has been head knowledge only, transform it into heart knowledge now.", "Speak to us on our road — even when we do not recognize You — and let us feel Your presence.", "Let the fire of Your presence and Your Word be the defining reality of this journey."]
+  },
+  {
+    title: "The Table of Our Deliverance",
+    date: "April 13",
+    scriptures: [
+      { ref: "Exodus 12:13\u201314, 17, 19\u201320", text: "The blood on the houses where you are staying will be a distinguishing mark for you; when I see the blood, I will pass over you. No plague will be among you to destroy you when I strike the land of Egypt. This day is to be a memorial for you, and you must celebrate it as a festival to the Lord throughout your generations as a permanent statute\u2026 You are to observe the Festival of Unleavened Bread because on this very day I brought your military divisions out of the land of Egypt." },
+      { ref: "Luke 22:19\u201320", text: "And he took bread, gave thanks, broke it, gave it to them, and said, \u201cThis is my body, which is given for you. Do this in remembrance of me.\u201d In the same way he also took the cup after supper and said, \u201cThis cup is the new covenant in my blood, which is poured out for you.\u201d" },
+      { ref: "Proverbs 9:5", text: "Come, eat my bread, and drink the wine I have mixed." }
+    ],
+    reflection: "<p>As they had all their lives, on the night before Jesus died, the disciples prepared to honor the Festivals of Unleavened Bread and Passover to celebrate the Lord\u2019s deliverance of Israel from slavery. And in the moment of their greatest loss\u2014the greatest triumph in all of history\u2014these festivals were fulfilled.</p><p>After the Lamb had offered His life, the table would never be seen in the same way. They remembered, and began to understand as never before.</p><p>They remembered Jesus\u2019 perfect life, His body torn, and His blood poured out\u2014in the courtyard, along Jerusalem\u2019s streets, and flowing down the tree where He was lifted up. And they remembered His words: \u201cThis is my body, which is given for you\u2026 This cup is the new covenant in my blood.\u201d</p><p>Through Moses, the Lord had given His people the festivals\u2014signs and instructions for deliverance from His judgments executed against the gods of Egypt. The blood of the lamb was spread over their doorframes, and when the destroyer came, that blood was their covering. It was not their ancestry, their understanding, or even their confession of the Lord that preserved them\u2014it was the blood applied to their homes that set them apart.</p><p>\u201cThis day is to be a memorial for you\u2026\u201d</p><p>What had been a remembrance of deliverance from Egypt was now revealing something greater. The Lamb had come\u2014He was making a way for His family to be set free and return home with Him.</p><p>At the table, Jesus was revealing the reality of the feasts. He was giving His sinless body\u2014like the yeastless bread given for their journey. He was offering His own blood\u2014His death, in exchange for their lives. This covenant was not written on tablets of stone, but established through His perfect life and sacrifice.</p><p>Proverbs calls us to come and partake\u2014to eat the bread and wine that He has prepared. The invitation is not merely to observe. What the Lord provides is given so that we might receive and share in the glory of His deliverance from the judgments to come\u2014a deliverance now extended beyond Israel to the nations.</p><p>The table is no longer only a place of looking back. It is a place of recognizing what He has done, receiving Him, and journeying together in covenant.</p><p>He had opened their minds to understand the Scriptures, and now they could see. The covenants\u2014old and new\u2014are one unfolding reality of the Kingdom, revealed in the Person of the King.</p>",
+    prayer: ["Lord, let the table be a place of encounter — not ritual but recognition of what You have done.", "Open our eyes to see that the Passover Lamb has come — and we are covered by His blood.", "Let the new covenant be real to us: You are our God, and we are Your people, set free.", "Teach us to come to Your table with gratitude for deliverance we did not earn.", "Reveal in the breaking of bread what the disciples saw — the King who gave Himself for us.", "Let what You established at the table shape our understanding of who You are and what Your Kingdom is.", "Draw us deeper into covenant with You — not as observers but as those who have been redeemed."]
+  }
+];
+// ─────────────────────────────────────────────────────────────────────
+// TIME-RELEASE LOGIC
+// Journey starts April 5, 2025. Each day unlocks at 7:00 AM CDT (UTC-5).
+// The full journey (Apr 5 – May 24) falls within CDT, so offset is fixed.
+// ─────────────────────────────────────────────────────────────────────
+const JOURNEY_START_UTC = Date.UTC(2025, 3, 5, 12, 0, 0); // Apr 5 2025 07:00 CDT = 12:00 UTC
+const MS_PER_DAY = 86400000;
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+function getUnlockUTC(dayIndex) {
+  return JOURNEY_START_UTC + dayIndex * MS_PER_DAY;
+}
+
+function getDayDate(dayIndex) {
+  const d = new Date(getUnlockUTC(dayIndex));
+  // Display in local time — but label shows the CDT calendar date
+  const cdtMs = getUnlockUTC(dayIndex) - (5 * 3600000); // subtract 5h to get CDT wall date
+  const cdtDate = new Date(cdtMs);
+  return `${MONTHS[cdtDate.getUTCMonth()]} ${cdtDate.getUTCDate()}`;
+}
+
+// Pad days array to 50 with coming-soon placeholders
+while (days.length < 50) {
+  days.push({ _comingSoon: true });
+}
+
+// Classify each day relative to now
+function classifyDay(index) {
+  const now = Date.now();
+  const unlock = getUnlockUTC(index);
+  if (days[index]._comingSoon) return 'coming-soon';
+  if (now >= unlock) return index === todayIndex() ? 'today' : 'available';
+  return 'locked';
+}
+
+function todayIndex() {
+  const now = Date.now();
+  for (let i = 49; i >= 0; i--) {
+    if (now >= getUnlockUTC(i)) return i;
+  }
+  return -1; // before journey starts
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// BUILD GRID
+// ─────────────────────────────────────────────────────────────────────
+let currentDay = null;
+
+function buildGrid() {
+  const grid = document.getElementById('days-grid');
+  const today = todayIndex();
+
+  days.forEach((day, i) => {
+    const state = classifyDay(i);
+    const dateLabel = getDayDate(i);
+    const title = day.title || 'Coming Soon';
+
+    const card = document.createElement('div');
+    card.className = `day-card ${state}`;
+    card.id = `day-card-${i}`;
+
+    let unlockMsg = '';
+    if (state === 'locked') {
+      unlockMsg = `<div class="day-unlock">Available at 7:00 AM CDT<br>${dateLabel}</div>`;
+    }
+
+    card.innerHTML = `
+      <div class="day-number">Day ${i + 1}</div>
+      <div class="day-title-preview">${title}</div>
+      <div class="day-date-label">${dateLabel}</div>
+      ${unlockMsg}
+    `;
+
+    if (state === 'available' || state === 'today') {
+      card.addEventListener('click', () => openDay(i));
+    }
+
+    grid.appendChild(card);
+  });
+
+  // Auto-open today's day if journey has started
+  if (today >= 0) {
+    openDay(today);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────
+// READER
+// ─────────────────────────────────────────────────────────────────────
+function openDay(index) {
+  const day = days[index];
+  currentDay = index;
+  const dateLabel = getDayDate(index);
+
+  document.querySelectorAll('.day-card').forEach(c => c.classList.remove('active'));
+  document.getElementById(`day-card-${index}`).classList.add('active');
+
+  document.getElementById('reader-eyebrow').textContent = `Day ${index + 1} of 50  ·  ${dateLabel}`;
+  document.getElementById('reader-title').textContent = day.title;
+  document.getElementById('reader-nav-label').textContent = `Day ${index + 1} of 50`;
+
+  document.getElementById('reader-scriptures').innerHTML = (day.scriptures || []).map(s =>
+    `<li class="scripture-item">
+      <span class="scripture-ref">${s.ref}</span>
+      <span class="scripture-text">${s.text}</span>
+    </li>`
+  ).join('');
+
+  document.getElementById('reader-reflection').innerHTML = day.reflection || '';
+
+  const cl = document.getElementById('reader-coleader');
+  if (day.coleader) {
+    document.getElementById('coleader-name-text').textContent = day.coleader;
+    cl.style.display = 'flex';
+  } else {
+    cl.style.display = 'none';
+  }
+
+  document.getElementById('reader-prayer').innerHTML = (day.prayer || []).map(p => `<li>${p}</li>`).join('');
+
+  // Prev: available if previous day is unlocked
+  const prevOk = index > 0 && classifyDay(index - 1) !== 'locked' && classifyDay(index - 1) !== 'coming-soon';
+  document.getElementById('btn-prev').disabled = !prevOk;
+
+  // Next: available if next day is unlocked (past days only)
+  const nextOk = index < 49 && (classifyDay(index + 1) === 'available' || classifyDay(index + 1) === 'today');
+  document.getElementById('btn-next').disabled = !nextOk;
+
+  const reader = document.getElementById('day-reader');
+  reader.classList.add('visible');
+  setTimeout(() => reader.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+}
+
+function navigateDay(dir) {
+  if (currentDay === null) return;
+  const next = currentDay + dir;
+  if (next < 0 || next > 49) return;
+  const state = classifyDay(next);
+  if (state === 'available' || state === 'today') openDay(next);
+}
+
+buildGrid();
+</script>
+</body>
+</html>
