@@ -301,7 +301,7 @@ const days = [
 // Journey starts April 5, 2025. Each day unlocks at 7:00 AM CDT (UTC-5).
 // The full journey (Apr 5 – May 24) falls within CDT, so offset is fixed.
 // ─────────────────────────────────────────────────────────────────────
-const JOURNEY_START_UTC = Date.UTC(2025, 3, 5, 12, 0, 0); // Apr 5 2025 07:00 CDT = 12:00 UTC
+const JOURNEY_START_UTC = Date.UTC(2026, 3, 5, 12, 0, 0); // Apr 5 2026 07:00 CDT = 12:00 UTC
 const MS_PER_DAY = 86400000;
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
@@ -376,10 +376,7 @@ function buildGrid() {
     grid.appendChild(card);
   });
 
-  // Auto-open today's day if journey has started
-  if (today >= 0) {
-    openDay(today);
-  }
+  // Reader stays hidden until user clicks a day card
 }
 
 // ─────────────────────────────────────────────────────────────────────
